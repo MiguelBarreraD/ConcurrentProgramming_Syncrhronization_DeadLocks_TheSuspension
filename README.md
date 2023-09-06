@@ -10,6 +10,20 @@
 Control de hilos con wait/notify. Productor/consumidor.
 
 1. Revise el funcionamiento del programa y ejecútelo. Mientras esto ocurren, ejecute jVisualVM y revise el consumo de CPU del proceso correspondiente. A qué se debe este consumo?, cual es la clase responsable?
+
+	<b>Respuesta:</b>
+	![](img/ConsumoVisual1.png)
+	En la siguiente imagen se representa un aumento del 30% del uso de la CPU
+	![](img/ConsumoLocal1.png)
+	En la clase Producer, el método run() contiene un bucle while infinito que genera datos aleatorios y los agrega a la cola queue. La generación y agregación de datos se realizan en un bucle constante sin detenerse. Esto puede ser una de las razones del alto consumo de CPU.
+
+	Además, el Thread.sleep(1000) dentro del bucle hace que el hilo del productor se duerma durante 1 segundo después de agregar un elemento, pero inmediatamente vuelve a agregar más datos. Esto significa que el productor está trabajando a una velocidad constante sin importar si el consumidor puede procesar los elementos en la cola.
+	
+	En la clase Consumer, el método run() también contiene un bucle while infinito que verifica si la cola queue tiene elementos y los consume con queue.poll(). Similar al productor, este bucle se ejecuta constantemente sin pausas, lo que puede contribuir al alto consumo de CPU.
+	
+	La clase que más contribuye al consumo de CPU en el código es la clase Producer. La razón es que el Producer está generando datos y agregándolos a la cola queue en un bucle infinito sin pausas significativas. Cada vez que se agrega un elemento a la cola, el bucle de producción espera 1 segundo antes de agregar otro elemento, pero inmediatamente continúa agregando más datos. Esto significa que el productor está trabajando constantemente, incluso si la cola está llena o si el consumidor no puede procesar los elementos a la misma velocidad.
+	Por tanto, la línea que más contribuye al problema de alto consumo de CPU en la clase Producer es la siguiente:
+	>queue.add(dataSeed);
 2. Haga los ajustes necesarios para que la solución use más eficientemente la CPU, teniendo en cuenta que -por ahora- la producción es lenta y el consumo es rápido. Verifique con JVisualVM que el consumo de CPU se reduzca.
 3. Haga que ahora el productor produzca muy rápido, y el consumidor consuma lento. Teniendo en cuenta que el productor conoce un límite de Stock (cuantos elementos debería tener, a lo sumo en la cola), haga que dicho límite se respete. Revise el API de la colección usada como cola para ver cómo garantizar que dicho límite no se supere. Verifique que, al poner un límite pequeño para el 'stock', no haya consumo alto de CPU ni errores.
 
