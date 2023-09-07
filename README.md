@@ -1,7 +1,7 @@
 
 ## Escuela Colombiana de Ingeniería
 ### Arquitecturas de Software – ARSW
-
+### Miguel Ángel Barrera Diaz - Jaider Arley Gonzalez Arias
 
 #### Ejercicio – programación concurrente, condiciones de carrera y sincronización de hilos. EJERCICIO INDIVIDUAL O EN PAREJAS.
 
