@@ -35,6 +35,7 @@ public class ControlFrame extends JFrame {
     private JLabel statisticsLabel;
     private JScrollPane scrollPane;
     private JTextField numOfImmortals;
+    private ImmortalUpdateReportCallback ucb;
 
     /**
      * Launch the application.
@@ -67,6 +68,9 @@ public class ControlFrame extends JFrame {
         contentPane.add(toolBar, BorderLayout.NORTH);
 
         final JButton btnStart = new JButton("Start");
+        JButton btnPauseAndCheck = new JButton("Pause and check");
+        JButton btnStop = new JButton("STOP");
+        JButton btnResume = new JButton("Resume");
         btnStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -79,18 +83,19 @@ public class ControlFrame extends JFrame {
                 }
 
                 btnStart.setEnabled(false);
+                btnPauseAndCheck.setEnabled(true);
+                btnResume.setEnabled(false);
+                btnStop.setEnabled(true);
 
             }
         });
         toolBar.add(btnStart);
 
-        JButton btnPauseAndCheck = new JButton("Pause and check");
+       
         btnPauseAndCheck.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                /*
-				 * COMPLETAR
-                 */
+                ucb.suspenderHilos();
                 int sum = 0;
                 for (Immortal im : immortals) {
                     sum += im.getHealth();
@@ -98,20 +103,17 @@ public class ControlFrame extends JFrame {
 
                 statisticsLabel.setText("<html>"+immortals.toString()+"<br>Health sum:"+ sum);
                 
-                
-
+                btnResume.setEnabled(true);
+                btnStart.setEnabled(false);
             }
         });
         toolBar.add(btnPauseAndCheck);
 
-        JButton btnResume = new JButton("Resume");
+        
 
         btnResume.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                /**
-                 * IMPLEMENTAR
-                 */
-
+                ucb.reanudarHilos();
             }
         });
 
@@ -125,8 +127,21 @@ public class ControlFrame extends JFrame {
         toolBar.add(numOfImmortals);
         numOfImmortals.setColumns(10);
 
-        JButton btnStop = new JButton("STOP");
+        
         btnStop.setForeground(Color.RED);
+        btnStop.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                immortals.clear();
+                TextAreaUpdateReportCallback updateCallback = new TextAreaUpdateReportCallback(output, scrollPane);
+                updateCallback.processReport("STOP");
+
+                btnStart.setEnabled(true);
+                btnPauseAndCheck.setEnabled(false);
+                btnResume.setEnabled(false);
+                btnStop.setEnabled(false);
+            }
+        });
         toolBar.add(btnStop);
 
         scrollPane = new JScrollPane();
@@ -144,7 +159,7 @@ public class ControlFrame extends JFrame {
 
     public List<Immortal> setupInmortals() {
 
-        ImmortalUpdateReportCallback ucb=new TextAreaUpdateReportCallback(output,scrollPane);
+        ucb = new TextAreaUpdateReportCallback(output,scrollPane);
         
         try {
             int ni = Integer.parseInt(numOfImmortals.getText());
@@ -169,11 +184,28 @@ class TextAreaUpdateReportCallback implements ImmortalUpdateReportCallback{
 
     JTextArea ta;
     JScrollPane jsp;
-
+    private boolean suspendido = false;
     public TextAreaUpdateReportCallback(JTextArea ta,JScrollPane jsp) {
         this.ta = ta;
         this.jsp=jsp;
-    }       
+    } 
+    // Método para suspender los hilos
+    public synchronized void suspenderHilos() {
+        suspendido = true;
+    }
+    
+    // Método para reanudar los hilos
+    public synchronized void reanudarHilos() {
+        suspendido = false;
+        notifyAll(); // Notificar a todos los hilos que pueden continuar
+    }
+    
+    // Método para que los hilos esperen si están suspendidos
+    public synchronized void esperarSiSuspendido() throws InterruptedException {
+        while (suspendido) {
+            wait(); // Esperar hasta que se reanuden los hilos
+        }
+    }      
     
     @Override
     public void processReport(String report) {
@@ -189,5 +221,7 @@ class TextAreaUpdateReportCallback implements ImmortalUpdateReportCallback{
         );
 
     }
+    
+    
     
 }

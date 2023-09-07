@@ -12,5 +12,7 @@ package edu.eci.arsw.highlandersim;
 public interface ImmortalUpdateReportCallback {
 
     public void processReport(String report);
-    
+    public void suspenderHilos();
+    public void reanudarHilos();
+    public void esperarSiSuspendido() throws InterruptedException;
 }
