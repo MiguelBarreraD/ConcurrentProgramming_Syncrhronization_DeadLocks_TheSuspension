@@ -1,0 +1,13 @@
+Conclusión
+
+La condición de carrera de pelear con inmortales muertos puede llevar a resultados inesperados o incorrectos si 
+no se maneja adecuadamente. En este caso, el problema radica en que, debido a la naturaleza concurrente de las operaciones, un 
+hilo puede intentar pelear con un inmortal que ya está muerto antes de que el otro hilo lo elimine por completo, lo que podría 
+llevar a situaciones inciertas o no deseadas.
+
+La solución propuesta para abordar este problema es introducir una verificación adicional antes de llevar a cabo la pelea. 
+Cuando un hilo intenta pelear con otro inmortal, primero verifica si ambos inmortales siguen con vida en ese momento. Solo si 
+ambos están vivos, se procede a realizar la pelea. Esta solución asegura que la pelea solo se lleve a cabo cuando ambas partes 
+estén vivas y evita conflictos que podrían surgir si se pelea con inmortales muertos. De esta manera, se garantiza que el resultado 
+de la pelea refleje correctamente el estado actual de los inmortales involucrados.
+
