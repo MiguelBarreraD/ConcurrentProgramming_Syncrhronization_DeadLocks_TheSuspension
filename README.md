@@ -54,16 +54,23 @@ Sincronización y Dead-Locks.
 	El invariante no se cumple, a continuación se puede ver que la suma de los puntos de vida siempre cambia.
 	
 	Prueba 1:
+
 	![](img/Inmortal_PC1.png)
+
 	Prueba 2:
+
 	![](img/Inmortal_PC2.png)
+
 4. Una primera hipótesis para que se presente la condición de carrera para dicha función (pause and check), es que el programa consulta la lista cuyos valores va a imprimir, a la vez que otros hilos modifican sus valores. Para corregir esto, haga lo que sea necesario para que efectivamente, antes de imprimir los resultados actuales, se pausen todos los demás hilos. Adicionalmente, implemente la opción ‘resume’.
 
 5. Verifique nuevamente el funcionamiento (haga clic muchas veces en el botón). Se cumple o no el invariante?.
 
 	<b>Respuesta: </b>
+
 	Sigue sin cumplirse el invariante
+	
 	![](img/pause.png)
+	
 6. Identifique posibles regiones críticas en lo que respecta a la pelea de los inmortales. Implemente una estrategia de bloqueo que evite las condiciones de carrera. Recuerde que si usted requiere usar dos o más ‘locks’ simultáneamente, puede usar bloques sincronizados anidados:
 
 	```java
@@ -76,6 +83,7 @@ Sincronización y Dead-Locks.
 	<b>Respuesta: </b>
 
 	Región crítica:
+
 	![](img/RegionCritica.png)
 
 7. Tras implementar su estrategia, ponga a correr su programa, y ponga atención a si éste se llega a detener. Si es así, use los programas jps y jstack para identificar por qué el programa se detuvo.
