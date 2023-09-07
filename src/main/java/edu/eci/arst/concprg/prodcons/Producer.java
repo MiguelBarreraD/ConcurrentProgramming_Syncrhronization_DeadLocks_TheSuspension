@@ -36,11 +36,14 @@ public class Producer extends Thread {
         while (true) {
             synchronized (lock) {
                 try {
+                    while (queue.size() >= stockLimit) {
+                        lock.wait();
+                    }
                     dataSeed = dataSeed + rand.nextInt(100);
                     System.out.println("Producer added " + dataSeed);
                     queue.add(dataSeed);
                     lock.notify();
-                    Thread.sleep(1000);
+                    Thread.sleep(200);
                 }  catch (InterruptedException ex) {
                     Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
                 }
