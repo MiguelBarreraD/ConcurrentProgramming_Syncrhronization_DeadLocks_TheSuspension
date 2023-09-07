@@ -69,8 +69,8 @@ Sincronización y Dead-Locks.
 
 	Sigue sin cumplirse el invariante
 	
-	![](img/pause.png)
-	
+	![](img/Pause.png)
+
 6. Identifique posibles regiones críticas en lo que respecta a la pelea de los inmortales. Implemente una estrategia de bloqueo que evite las condiciones de carrera. Recuerde que si usted requiere usar dos o más ‘locks’ simultáneamente, puede usar bloques sincronizados anidados:
 
 	```java
